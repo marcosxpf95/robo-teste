@@ -117,7 +117,7 @@ public class Robo
 
         var proximosEstadosPossiveis = ObterProximosEstados<Cabeca.RotacaoEstados>(this.Cabeca!.Rotacao);
 
-        if (!IsStateValid(estado, proximosEstadosPossiveis))
+        if (!IsEstadoValido(estado, proximosEstadosPossiveis))
         {
             return new ValidacaoResponse
             {
@@ -139,7 +139,7 @@ public class Robo
     {
         var proximosEstadosPossiveis = ObterProximosEstados<Cabeca.InclinacaoEstados>(this.Cabeca!.Inclinacao);
 
-        if (!IsStateValid(estado, proximosEstadosPossiveis))
+        if (!IsEstadoValido(estado, proximosEstadosPossiveis))
         {
             return new ValidacaoResponse
             {
@@ -190,7 +190,7 @@ public class Robo
         {
             var proximosEstadosPossiveis = ObterProximosEstados<Braco.CotoveloEstados>(braco.Cotovelo);
 
-            if (!IsStateValid(estado, proximosEstadosPossiveis))
+            if (!IsEstadoValido(estado, proximosEstadosPossiveis))
             {
                 return new ValidacaoResponse
                 {
@@ -232,7 +232,7 @@ public class Robo
 
             var proximosEstadosPossiveis = ObterProximosEstados<Braco.PulsoEstados>(braco.Pulso);
 
-            if (!IsStateValid(estado, proximosEstadosPossiveis))
+            if (!IsEstadoValido(estado, proximosEstadosPossiveis))
             {
                 return new ValidacaoResponse
                 {
@@ -282,8 +282,8 @@ public class Robo
         return resultado.ToArray();
     }
 
-    private bool IsStateValid(string? requestedState, string[]? validStates)
+    private bool IsEstadoValido(string? estado, string[]? proximosEstadosValidos)
     {
-        return string.IsNullOrEmpty(requestedState) || (validStates?.Contains(requestedState) ?? false);
+        return string.IsNullOrEmpty(estado) || (proximosEstadosValidos?.Contains(estado) ?? false);
     }
 }
