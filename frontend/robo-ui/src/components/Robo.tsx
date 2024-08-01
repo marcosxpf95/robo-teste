@@ -7,6 +7,7 @@ import Parte from "./Parte";
 const Robo = () => {
   const [roboData, setRoboData] = useState<roboDto | null>(null);
   const [open, setOpen] = useState(false);
+  const [titleErrorMessage, setTitleErrorMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -46,11 +47,14 @@ const Robo = () => {
     if (error instanceof Error) {
       if ((error as any).response) {
         const errorResponse = (error as any).response.data.message;
+        setTitleErrorMessage("Movimento não permitido");
         setErrorMessage(`${errorResponse}`);
       } else {
+        setTitleErrorMessage("Erro!");
         setErrorMessage(`Erro desconhecido: ${error.message}`);
       }
     } else {
+      setTitleErrorMessage("Erro!");
       setErrorMessage(`Erro desconhecido: ${error}`);
     }
     setOpen(true);
@@ -127,7 +131,7 @@ const Robo = () => {
           }}
         >
           <Typography variant="h6" id="error-modal-title">
-            Movimento não permitido
+            {titleErrorMessage}
           </Typography>
           <Typography id="error-modal-description" sx={{ mt: 2 }}>
             {errorMessage}
