@@ -10,17 +10,17 @@ public static class ContractMappings
     {
         return new RoboResponse
         {
-            CabecaRotacao = robo.CabecaRotacao.ToString(),
+            CabecaRotacao = robo.Cabeca.Rotacao.ToString(),
             ProximosCabecaRotacao = robo.ProximosCabecaRotacao,
-            CabecaInclinacao = robo.CabecaInclicacao.ToString(),
+            CabecaInclinacao = robo.Cabeca.Inclinacao.ToString(),
             ProximosCabecaInclinacao = robo.ProximosCabecaInclinacao,
-            BracoDireitoCotoveloContracao = robo.BracoDireitoCotoveloContracao.ToString(),
+            BracoDireitoCotoveloContracao = robo.BracoDireito.Cotovelo.ToString(),
             ProximosBracoDireitoCotoveloContracao = robo.ProximosBracoDireitoCotoveloContracao,
-            BracoDireitoPulsoRotacao = robo.BracoDireitoPulsoRotacao.ToString(),
+            BracoDireitoPulsoRotacao = robo.BracoDireito.Pulso.ToString(),
             ProximosBracoDireitoPulsoRotacao = robo.ProximosBracoDireitoPulsoRotacao,
-            BracoEsquerdoCotoveloContracao = robo.BracoEsquerdoCotoveloContracao.ToString(),
+            BracoEsquerdoCotoveloContracao = robo.BracoEsquerdo.Cotovelo.ToString(),
             ProximosBracoEsquerdoCotoveloContracao = robo.ProximosBracoEsquerdoCotoveloContracao,
-            BracoEsquerdoPulsoRotacao = robo.BracoEsquerdoPulsoRotacao.ToString(),
+            BracoEsquerdoPulsoRotacao = robo.BracoEsquerdo.Pulso.ToString(),
             ProximosBracoEsquerdoPulsoRotacao = robo.ProximosBracoEsquerdoPulsoRotacao
         };
     }

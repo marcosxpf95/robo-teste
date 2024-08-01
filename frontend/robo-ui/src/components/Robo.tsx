@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Typography, Box } from "@mui/material";
 import { roboDto } from "../services/types/roboDto";
-import {
-  getRobo,
-  rotacionarCabeca,
-  inclinarCabeca,
-  contrairBracoDireito,
-  rotacionarBracoDireito,
-  contrairBracoEsquerdo,
-  rotacionarBracoEsquerdo,
-} from "../services/api";
+import { getRobo, updateRobo } from "../services/api";
 import Parte from "./Parte";
 
 const Robo = () => {
@@ -33,60 +25,17 @@ const Robo = () => {
   const atualizarEstado = async () => {
     try {
       const data = await getRobo();
+      console.log(data);
       setRoboData(data);
     } catch (error) {
       exibirError(error);
     }
   };
 
-  const atualizarRotacionarCabeca = async (comando: string) => {
+  const enviarComando = async (comando: string) => {
     try {
-      await rotacionarCabeca(comando);
-      atualizarEstado();
-    } catch (error) {
-      exibirError(error);
-    }
-  };
-
-  const atualizarInclinarCabeca = async (comando: string) => {
-    try {
-      await inclinarCabeca(comando);
-      atualizarEstado();
-    } catch (error) {
-      exibirError(error);
-    }
-  };
-
-  const atualizarContrairBracoDireito = async (comando: string) => {
-    try {
-      await contrairBracoDireito(comando);
-      atualizarEstado();
-    } catch (error) {
-      exibirError(error);
-    }
-  };
-
-  const atualizarRotacionarBracoDireito = async (comando: string) => {
-    try {
-      await rotacionarBracoDireito(comando);
-      atualizarEstado();
-    } catch (error) {
-      exibirError(error);
-    }
-  };
-
-  const atualizarContrairBracoEsquerdo = async (comando: string) => {
-    try {
-      await contrairBracoEsquerdo(comando);
-      atualizarEstado();
-    } catch (error) {
-      exibirError(error);
-    }
-  };
-
-  const atualizarRotacionarBracoEsquerdo = async (comando: string) => {
-    try {
-      await rotacionarBracoEsquerdo(comando);
+      var result = await updateRobo(comando);
+      console.log(result);
       atualizarEstado();
     } catch (error) {
       exibirError(error);
@@ -116,61 +65,79 @@ const Robo = () => {
       {roboData ? (
         <>
           <Parte
-            Nome="Cabeça Rotação"
-            Estado={roboData.cabecaRotacao}
-            ProximosEstados={roboData.proximosCabecaRotacao}
-            onClick={atualizarRotacionarCabeca}
+            nome="Cabeça Rotação"
+            estado={roboData.cabecaRotacao}
+            proximosEstados={roboData.proximosCabecaRotacao}
+            comando="Cabeca:Rotacao"
+            onClick={enviarComando}
           />
           <Parte
-            Nome="Cabeça Inclinação"
-            Estado={roboData.cabecaInclinacao}
-            ProximosEstados={roboData.proximosCabecaInclinacao}
-            onClick={atualizarInclinarCabeca}
+            nome="Cabeça Inclinação"
+            estado={roboData.cabecaInclinacao}
+            proximosEstados={roboData.proximosCabecaInclinacao}
+            comando="Cabeca:Inclinacao"
+            onClick={enviarComando}
           />
           <Parte
-            Nome="Braço Direito Cotovelo Contração"
-            Estado={roboData.bracoDireitoCotoveloContracao}
-            ProximosEstados={roboData.proximosBracoDireitoCotoveloContracao}
-            onClick={atualizarContrairBracoDireito}
+            nome="Braço Direito Cotovelo Contração"
+            estado={roboData.bracoDireitoCotoveloContracao}
+            proximosEstados={roboData.proximosBracoDireitoCotoveloContracao}
+            comando="BracoDireito:Cotovelo"
+            onClick={enviarComando}
           />
           <Parte
-            Nome="Braço Direito Pulso Rotação"
-            Estado={roboData.bracoDireitoPulsoRotacao}
-            ProximosEstados={roboData.proximosBracoDireitoPulsoRotacao}
-            onClick={atualizarRotacionarBracoDireito}
+            nome="Braço Direito Pulso Rotação"
+            estado={roboData.bracoDireitoPulsoRotacao}
+            proximosEstados={roboData.proximosBracoDireitoPulsoRotacao}
+            comando="BracoDireito:Pulso"
+            onClick={enviarComando}
           />
           <Parte
-            Nome="Braço Esquerdo Cotovelo Contração"
-            Estado={roboData.bracoEsquerdoCotoveloContracao}
-            ProximosEstados={roboData.proximosBracoEsquerdoCotoveloContracao}
-            onClick={atualizarContrairBracoEsquerdo}
+            nome="Braço Esquerdo Cotovelo Contração"
+            estado={roboData.bracoEsquerdoCotoveloContracao}
+            proximosEstados={roboData.proximosBracoEsquerdoCotoveloContracao}
+            comando="BracoEsquerdo:Cotovelo"
+            onClick={enviarComando}
           />
           <Parte
-            Nome="Braço Esquerdo Pulso Rotação"
-            Estado={roboData.bracoEsquerdoPulsoRotacao}
-            ProximosEstados={roboData.proximosBracoEsquerdoPulsoRotacao}
-            onClick={atualizarRotacionarBracoEsquerdo}
+            nome="Braço Esquerdo Pulso Rotação"
+            estado={roboData.bracoEsquerdoPulsoRotacao}
+            proximosEstados={roboData.proximosBracoEsquerdoPulsoRotacao}
+            comando="BracoEsquerdo:Pulso"
+            onClick={enviarComando}
           />
         </>
       ) : (
         <p>Carregando dados...</p>
       )}
-            
+
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="error-modal-title"
         aria-describedby="error-modal-description"
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
-        <Box sx={{ width: 400, padding: 2, backgroundColor: 'background.paper', borderRadius: 2 }}>
+        <Box
+          sx={{
+            width: 400,
+            padding: 2,
+            backgroundColor: "background.paper",
+            borderRadius: 2,
+          }}
+        >
           <Typography variant="h6" id="error-modal-title">
             Movimento não permitido
           </Typography>
           <Typography id="error-modal-description" sx={{ mt: 2 }}>
             {errorMessage}
           </Typography>
-          <Button onClick={handleClose} variant="contained" color="primary" sx={{ mt: 2 }}>
+          <Button
+            onClick={handleClose}
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
             Fechar
           </Button>
         </Box>

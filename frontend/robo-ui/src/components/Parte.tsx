@@ -1,9 +1,10 @@
 import React from "react";
 
 interface ParteProps {
-  Nome?: string;
-  Estado?: string;
-  ProximosEstados?: string[];
+  nome?: string;
+  estado?: string;
+  comando?: string;
+  proximosEstados?: string[];
   onClick: (estado: string) => void;
 }
 
@@ -17,21 +18,30 @@ function formatarTexto(input: string): string {
   return resultado;
 }
 
-const Parte = ({ Nome, Estado, ProximosEstados, onClick }: ParteProps) => {
+const Parte = ({
+  nome,
+  estado,
+  comando,
+  proximosEstados,
+  onClick,
+}: ParteProps) => {
   return (
     <div className="parte-container">
       <div className="parte-header">
-        <h1>{Nome}</h1>
-        <p>Estado Atual: {formatarTexto(Estado!) || "N/A"}</p>
+        <h1>{nome}</h1>
+        <p>Estado Atual: {formatarTexto(estado!) || "N/A"}</p>
       </div>
       <div className="parte-buttons-container">
         <div className="parte-buttons-header">
           <p>Próximos Estados</p>
         </div>
         <div className="parte-buttons">
-          {ProximosEstados &&
-            ProximosEstados.map((estado, index) => (
-              <button key={index} onClick={() => onClick(estado)}>
+          {proximosEstados &&
+            proximosEstados.map((estado, index) => (
+              <button
+                key={index}
+                onClick={() => onClick(`${comando}:${estado}`)}
+              >
                 {formatarTexto(estado)}
               </button>
             ))}
