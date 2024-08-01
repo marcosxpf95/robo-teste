@@ -115,14 +115,14 @@ public class Robo
             };
         }
 
-        var proximosComandosPossiveis = ObterProximosEstados<Cabeca.RotacaoEstados>(this.Cabeca!.Rotacao);
+        var proximosEstadosPossiveis = ObterProximosEstados<Cabeca.RotacaoEstados>(this.Cabeca!.Rotacao);
 
-        if (!IsStateValid(estado, proximosComandosPossiveis))
+        if (!IsStateValid(estado, proximosEstadosPossiveis))
         {
             return new ValidacaoResponse
             {
                 Success = false,
-                Message = $"O valor fornecido para rotacionar a cabeça não é válido. Valores possíveis: {string.Join(", ", proximosComandosPossiveis)}."
+                Message = $"O valor fornecido para rotacionar a cabeça não é válido. Valores possíveis: {string.Join(", ", proximosEstadosPossiveis)}."
             };
         }
 
@@ -137,14 +137,14 @@ public class Robo
 
     private ValidacaoResponse AtualizarInclinacao(string estado, Cabeca.InclinacaoEstados inclinacao)
     {
-        var proximosComandosPossiveis = ObterProximosEstados<Cabeca.InclinacaoEstados>(this.Cabeca!.Inclinacao);
+        var proximosEstadosPossiveis = ObterProximosEstados<Cabeca.InclinacaoEstados>(this.Cabeca!.Inclinacao);
 
-        if (!IsStateValid(estado, proximosComandosPossiveis))
+        if (!IsStateValid(estado, proximosEstadosPossiveis))
         {
             return new ValidacaoResponse
             {
                 Success = false,
-                Message = $"O valor fornecido para inclinar a cabeça não é válido. Valores possíveis: {string.Join(", ", proximosComandosPossiveis)}."
+                Message = $"O valor fornecido para inclinar a cabeça não é válido. Valores possíveis: {string.Join(", ", proximosEstadosPossiveis)}."
             };
         }
 
@@ -159,12 +159,12 @@ public class Robo
 
     private ValidacaoResponse AtualizarBracoEsquerdo(string movimento, string estado)
     {
-        return AtualizarBraco(BracoEsquerdo, movimento, estado);
+        return AtualizarBraco(this.BracoEsquerdo, movimento, estado);
     }
 
     private ValidacaoResponse AtualizarBracoDireito(string movimento, string estado)
     {
-        return AtualizarBraco(BracoDireito, movimento, estado);
+        return AtualizarBraco(this.BracoDireito, movimento, estado);
     }
 
     private ValidacaoResponse AtualizarBraco(Braco braco, string tipo, string estado)
@@ -188,14 +188,14 @@ public class Robo
     {
         if (Enum.TryParse<Braco.CotoveloEstados>(estado, out var cotovelo))
         {
-            var proximosComandosPossiveis = ObterProximosEstados<Braco.CotoveloEstados>(braco.Cotovelo);
+            var proximosEstadosPossiveis = ObterProximosEstados<Braco.CotoveloEstados>(braco.Cotovelo);
 
-            if (!IsStateValid(estado, proximosComandosPossiveis))
+            if (!IsStateValid(estado, proximosEstadosPossiveis))
             {
                 return new ValidacaoResponse
                 {
                     Success = false,
-                    Message = $"O valor fornecido para o estado do cotovelo não é válido. Valores possíveis: {string.Join(", ", proximosComandosPossiveis)}"
+                    Message = $"O valor fornecido para o estado do cotovelo não é válido. Valores possíveis: {string.Join(", ", proximosEstadosPossiveis)}"
                 };
             }
 
@@ -217,7 +217,7 @@ public class Robo
         }
     }
 
-    private static ValidacaoResponse AtualizarPulso(Braco braco, string estado)
+    private ValidacaoResponse AtualizarPulso(Braco braco, string estado)
     {
         if (Enum.TryParse<Braco.PulsoEstados>(estado, out var pulso))
         {
@@ -227,6 +227,17 @@ public class Robo
                 {
                     Success = false,
                     Message = $"Não é possível rotacionar o pulso se o cotovelo não estiver fortemente contraído."
+                };
+            }
+
+            var proximosEstadosPossiveis = ObterProximosEstados<Braco.PulsoEstados>(braco.Pulso);
+
+            if (!IsStateValid(estado, proximosEstadosPossiveis))
+            {
+                return new ValidacaoResponse
+                {
+                    Success = false,
+                    Message = $"O valor fornecido para o estado do pulso não é válido. Valores possíveis: {string.Join(", ", proximosEstadosPossiveis)}"
                 };
             }
 
