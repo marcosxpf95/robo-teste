@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: url("./assets/background.jpg"); /* Define a imagem de fundo */
+  background-size: cover; /* Ajusta o tamanho da imagem para cobrir toda a página */
+  background-position: center; /* Centraliza a imagem de fundo */
+  background-repeat: no-repeat; /* Evita que a imagem se repita */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.parte-container {
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px;
+  width: 100%; /* Ajuste conforme necessário */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.parte-header {
+  margin-bottom: 16px;
+}
+
+.parte-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  gap: 8px; /* Espaçamento entre os botões */
+  margin-top: auto; /* Empurra os botões para o final do container */
+}
+
+.parte-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.parte-buttons button:hover {
+  background-color: #0056b3;
+}
