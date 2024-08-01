@@ -24,7 +24,7 @@ code {
   border-radius: 8px;
   padding: 16px;
   margin: 8px;
-  width: 100%; /* Ajuste conforme necessário */
+  width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -36,8 +36,8 @@ code {
   display: flex;
   flex-direction: column;
   width: 20%;
-  gap: 8px; /* Espaçamento entre os botões */
-  margin-top: auto; /* Empurra os botões para o final do container */
+  gap: 8px;
+  margin-top: auto;
 }
 
 .parte-buttons button {
