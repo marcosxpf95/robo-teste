@@ -17,7 +17,7 @@ public class RoboServicesTests
         _roboServices = new RoboServices(_mockRoboRepository.Object);
     }
 
-    #region cabeça
+    #region testes cabeça
 
     [Fact]
     public void Get_RoboExistente_DeveRetornarRobo()
@@ -105,7 +105,7 @@ public class RoboServicesTests
     public void Cabeca_Nao_Deve_Inclinar_ParaCima_Quando_EstiverParaBaixo()
     {
         // Arrange
-         var expectedRobo = new Robo();
+        var expectedRobo = new Robo();
         expectedRobo.Cabeca.Inclinacao = Cabeca.InclinacaoEstados.ParaBaixo;
         _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
@@ -121,8 +121,8 @@ public class RoboServicesTests
     [Fact]
     public void Cabeca_Nao_Deve_InclinarParaBaixo_Quando_EstiverParaCima()
     {
-         // Arrange
-         var expectedRobo = new Robo();
+        // Arrange
+        var expectedRobo = new Robo();
         expectedRobo.Cabeca.Inclinacao = Cabeca.InclinacaoEstados.ParaCima;
         _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
@@ -137,141 +137,241 @@ public class RoboServicesTests
 
     #endregion
 
-    // #region braco_esquerdo
+    #region testes braco esquerdo
+    [Fact]
+    public void BracoEsquerdoCotovelo_Deve_Contrair_Quando_ComandoForValido()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoEsquerdo.Cotovelo = Braco.CotoveloEstados.Repouso;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
-    // [Fact]
-    // public void BracoEsquerdo_Deve_Rotacionar_Quando_CotoveloEstiverFortementeContraido()
-    // {
-    //     // Arrage
-    //     var robo = RoboInitializer.CriarInitializedRobo();
-    //     robo.BracoEsquerdoCotoveloContracao = CotoveloContracao.FortementeContraido;
-    //     _mockRoboRepository.Setup(r => r.Get()).Returns(robo);
+        // Act
+        var result = _roboServices.EnviarComando("BracoEsquerdo:Cotovelo:LevementeContraido");
 
-    //     // Act
-    //     var result = _roboServices.RatacionarBracoEsquerdo("Rotacao45");
+        // Assert
+        expectedRobo.BracoEsquerdo.Cotovelo.ToString().Should().Be(Braco.CotoveloEstados.LevementeContraido.ToString());
+        result.Success.Should().Be(true);
+    }
 
-    //     // Assert
-    //     robo.BracoEsquerdoPulsoRotacao.ToString().Should().Be(PulsoRotacao.Rotacao45.ToString());
-    //     result.Success.Should().Be(true);
-    // }
+    [Fact]
+    public void BracoEsquerdoCotovelo_NaoDeve_ContrairParaFortementeContraido_Quando_BracoEsquerdoCotoveloEstiverEmRepouso()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoEsquerdo.Cotovelo = Braco.CotoveloEstados.Repouso;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
+        // Act
+        var result = _roboServices.EnviarComando("BracoEsquerdo:Cotovelo:FortementeContraido");
 
-    // [Fact]
-    // public void BracoEsquerdo_NaoDeve_Rotacionar_Quando_CotoveloNaoEstiverFortementeContraido()
-    // {
-    //     // Arrage
-    //     var robo = RoboInitializer.CriarInitializedRobo();
-    //     _mockRoboRepository.Setup(r => r.Get()).Returns(robo);
+        // Assert
+        expectedRobo.BracoEsquerdo.Cotovelo.ToString().Should().Be(Braco.CotoveloEstados.Repouso.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("O valor fornecido para o estado do cotovelo não é válido. Valores possíveis: LevementeContraido");
+    }
 
-    //     // Act
-    //     var result = _roboServices.RatacionarBracoEsquerdo("Rotacao45");
+    [Fact]
+    public void BracoEsquerdoCotovelo_NaoDeve_ContrairParaRepouso_Quando_BracoEsquerdoCotoveloEstiverFortementeContraido()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoEsquerdo.Cotovelo = Braco.CotoveloEstados.LevementeContraido;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
-    //     // Assert
-    //     robo.BracoEsquerdoPulsoRotacao.ToString().Should().Be(PulsoRotacao.EmRepouso.ToString());
-    //     result.Success.Should().Be(false);
-    //     result.Message.Should().Be("Não é possível rotacionar o braço se o cotovelo não estiver fortemente contraído.");
-    // }
+        // Act
+        var result = _roboServices.EnviarComando("BracoEsquerdo:Cotovelo:FortementeContraido");
 
-    // [Fact]
-    // public void BracoEsquerdo_NaoDeve_Rotacionar90_Quando_PulsoEstiverEmRepouso()
-    // {
-    //     // Arrage
-    //     var robo = RoboInitializer.CriarInitializedRobo();
-    //     robo.BracoEsquerdoCotoveloContracao = CotoveloContracao.FortementeContraido;
-    //     _mockRoboRepository.Setup(r => r.Get()).Returns(robo);
+        // Assert
+        expectedRobo.BracoEsquerdo.Cotovelo.ToString().Should().Be(Braco.CotoveloEstados.LevementeContraido.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("O valor fornecido para o estado do cotovelo não é válido. Valores possíveis: Repouso, Contraido");
+    }
 
-    //     // Arrage
-    //     var result = _roboServices.RatacionarBracoEsquerdo("Rotacao90");
+    [Fact]
+    public void BracoEsquerdoPulso_Deve_Rotacionar_Quando_BracoEsquerdoCotoveloEsquerdoEstiverFortementeContraido()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoEsquerdo.Cotovelo = Braco.CotoveloEstados.FortementeContraido;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
-    //     // Arrage
-    //     robo.BracoEsquerdoPulsoRotacao.ToString().Should().Be(PulsoRotacao.EmRepouso.ToString());
-    //     result.Success.Should().Be(false);
-    //     result.Message.Should().Be("O valor fornecido para a rotação do pulso esquerdo não é válido. Valores possíveis: RotacaoMenos45, Rotacao45");
-    // }
+        // Act
+        var result = _roboServices.EnviarComando("BracoEsquerdo:Pulso:Rotacao45");
 
-    // [Fact]
-    // public void BracoEsquerdo_NaoDeve_RotacionarMenos90_Quando_PulsoEstiverEmRepouso()
-    // {
-    //     // Arrage
-    //     var robo = RoboInitializer.CriarInitializedRobo();
-    //     robo.BracoEsquerdoCotoveloContracao = CotoveloContracao.FortementeContraido;
-    //     _mockRoboRepository.Setup(r => r.Get()).Returns(robo);
+        // Assert
+        expectedRobo.BracoEsquerdo.Pulso.ToString().Should().Be(Braco.PulsoEstados.Rotacao45.ToString());
+        result.Success.Should().Be(true);
+    }
 
-    //     // Arrage
-    //     var result = _roboServices.RatacionarBracoEsquerdo("RotacaoMenos90");
+    [Fact]
+    public void BracoEsquerdoPulso_NaoDeve_Rotacionar_Quando_BracoEsquerdoCotoveloNaoEstiverFortementeContraido()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
-    //     // Arrage
-    //     robo.BracoEsquerdoPulsoRotacao.ToString().Should().Be(PulsoRotacao.EmRepouso.ToString());
-    //     result.Success.Should().Be(false);
-    //     result.Message.Should().Be("O valor fornecido para a rotação do pulso esquerdo não é válido. Valores possíveis: RotacaoMenos45, Rotacao45");
-    // }
+        // Act
+        var result = _roboServices.EnviarComando("BracoEsquerdo:Pulso:Rotacao45");
 
-    // #endregion
-    // #region braco_direito
-    // [Fact]
-    // public void BracoDireito_Deve_Rotacionar_Quando_CotoveloEstiverFortementeContraido()
-    // {
-    //     // Arrage
-    //     var robo = RoboInitializer.CriarInitializedRobo();
-    //     robo.BracoDireitoCotoveloContracao = CotoveloContracao.FortementeContraido;
-    //     _mockRoboRepository.Setup(r => r.Get()).Returns(robo);
+        // Assert
+        expectedRobo.BracoEsquerdo.Pulso.ToString().Should().Be(Braco.PulsoEstados.Repouso.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("Não é possível rotacionar o pulso se o cotovelo não estiver fortemente contraído.");
+    }
 
-    //     // Act
-    //     var result = _roboServices.RatacionarBracoDireito("Rotacao45");
+    [Fact]
+    public void BracoEsquerdoPulso_NaoDeve_Rotacionar90_Quando_BracoEsquerdoPulsoEstiverEmRepouso()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoEsquerdo.Cotovelo = Braco.CotoveloEstados.FortementeContraido;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
-    //     // Assert
-    //     robo.BracoDireitoPulsoRotacao.ToString().Should().Be(PulsoRotacao.Rotacao45.ToString());
-    //     result.Success.Should().Be(true);
-    // }
+        // Arrage
+        var result = _roboServices.EnviarComando("BracoEsquerdo:Pulso:Rotacao90");
 
-    // [Fact]
-    // public void BracoDireito_NaoDeve_Rotacionar_Quando_CotoveloNaoEstiverFortementeContraido()
-    // {
-    //     // Arrage
-    //     var robo = RoboInitializer.CriarInitializedRobo();
-    //     _mockRoboRepository.Setup(r => r.Get()).Returns(robo);
+        // Arrage
+        expectedRobo.BracoEsquerdo.Pulso.ToString().Should().Be(Braco.PulsoEstados.Repouso.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("O valor fornecido para o estado do pulso não é válido. Valores possíveis: RotacaoMenos45, Rotacao45");
+    }
 
-    //     // Act
-    //     var result = _roboServices.RatacionarBracoDireito("Rotacao45");
+    [Fact]
+    public void BracoEsquerdoPulso_NaoDeve_RotacionarMenos90_Quando_BracoEsquerdoPulsoEstiverEmRepouso()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoEsquerdo.Cotovelo = Braco.CotoveloEstados.FortementeContraido;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
-    //     // Assert
-    //     robo.BracoDireitoPulsoRotacao.ToString().Should().Be(PulsoRotacao.EmRepouso.ToString());
-    //     result.Success.Should().Be(false);
-    //     result.Message.Should().Be("Não é possível rotacionar o braço se o cotovelo não estiver fortemente contraído.");
-    // }
+        // Arrage
+        var result = _roboServices.EnviarComando("BracoEsquerdo:Pulso:RotacaoMenos90");
 
-    // [Fact]
-    // public void BracoDireito_NaoDeve_Rotacionar90_Quando_PulsoEstiverEmRepouso()
-    // {
-    //     // Arrage
-    //     var robo = RoboInitializer.CriarInitializedRobo();
-    //     robo.BracoDireitoCotoveloContracao = CotoveloContracao.FortementeContraido;
-    //     _mockRoboRepository.Setup(r => r.Get()).Returns(robo);
+        // Arrage
+        expectedRobo.BracoEsquerdo.Pulso.ToString().Should().Be(Braco.PulsoEstados.Repouso.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("O valor fornecido para o estado do pulso não é válido. Valores possíveis: RotacaoMenos45, Rotacao45");
+    }
 
-    //     // Arrage
-    //     var result = _roboServices.RatacionarBracoDireito("Rotacao90");
+    #endregion
 
-    //     // Arrage
-    //     robo.BracoDireitoPulsoRotacao.ToString().Should().Be(PulsoRotacao.EmRepouso.ToString());
-    //     result.Success.Should().Be(false);
-    //     result.Message.Should().Be("O valor fornecido para a rotação do pulso direito não é válido. Valores possíveis: RotacaoMenos45, Rotacao45");
-    // }
+    #region testes braco direito
 
-    // [Fact]
-    // public void BracoDireito_NaoDeve_RotacionarMenos90_Quando_PulsoEstiverEmRepouso()
-    // {
-    //     // Arrage
-    //     var robo = RoboInitializer.CriarInitializedRobo();
-    //     robo.BracoDireitoCotoveloContracao = CotoveloContracao.FortementeContraido;
-    //     _mockRoboRepository.Setup(r => r.Get()).Returns(robo);
+    [Fact]
+    public void BracoDireitoCotovelo_Deve_Contrair_Quando_ComandoForValido()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoDireito.Cotovelo = Braco.CotoveloEstados.Repouso;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
 
-    //     // Arrage
-    //     var result = _roboServices.RatacionarBracoDireito("RotacaoMenos90");
+        // Act
+        var result = _roboServices.EnviarComando("BracoDireito:Cotovelo:LevementeContraido");
 
-    //     // Arrage
-    //     robo.BracoDireitoPulsoRotacao.ToString().Should().Be(PulsoRotacao.EmRepouso.ToString());
-    //     result.Success.Should().Be(false);
-    //     result.Message.Should().Be("O valor fornecido para a rotação do pulso direito não é válido. Valores possíveis: RotacaoMenos45, Rotacao45");
-    // }
-    // #endregion
+        // Assert
+        expectedRobo.BracoDireito.Cotovelo.ToString().Should().Be(Braco.CotoveloEstados.LevementeContraido.ToString());
+        result.Success.Should().Be(true);
+    }
+
+    [Fact]
+    public void BracoDireitoCotovelo_NaoDeve_ContrairParaFortementeContraido_Quando_BracoDireitoCotoveloEstiverEmRepouso()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoDireito.Cotovelo = Braco.CotoveloEstados.Repouso;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
+
+        // Act
+        var result = _roboServices.EnviarComando("BracoDireito:Cotovelo:FortementeContraido");
+
+        // Assert
+        expectedRobo.BracoDireito.Cotovelo.ToString().Should().Be(Braco.CotoveloEstados.Repouso.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("O valor fornecido para o estado do cotovelo não é válido. Valores possíveis: LevementeContraido");
+    }
+
+    [Fact]
+    public void BracoDireitoCotovelo_NaoDeve_ContrairParaRepouso_Quando_BracoDireitoCotoveloEstiverFortementeContraido()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoDireito.Cotovelo = Braco.CotoveloEstados.LevementeContraido;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
+
+        // Act
+        var result = _roboServices.EnviarComando("BracoDireito:Cotovelo:FortementeContraido");
+
+        // Assert
+        expectedRobo.BracoDireito.Cotovelo.ToString().Should().Be(Braco.CotoveloEstados.LevementeContraido.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("O valor fornecido para o estado do cotovelo não é válido. Valores possíveis: Repouso, Contraido");
+    }
+
+    [Fact]
+    public void BracoDireitoPulso_Deve_Rotacionar_Quando_BracoCotoveloDireitoEstiverFortementeContraido()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoDireito.Cotovelo = Braco.CotoveloEstados.FortementeContraido;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
+
+        // Act
+        var result = _roboServices.EnviarComando("BracoDireito:Pulso:Rotacao45");
+
+        // Assert
+        expectedRobo.BracoDireito.Pulso.ToString().Should().Be(Braco.PulsoEstados.Rotacao45.ToString());
+        result.Success.Should().Be(true);
+    }
+
+    [Fact]
+    public void BracoDireitoPulso_NaoDeve_Rotacionar_Quando_BracoDireitoCotoveloNaoEstiverFortementeContraido()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
+
+        // Act
+        var result = _roboServices.EnviarComando("BracoDireito:Pulso:Rotacao45");
+
+        // Assert
+        expectedRobo.BracoDireito.Pulso.ToString().Should().Be(Braco.PulsoEstados.Repouso.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("Não é possível rotacionar o pulso se o cotovelo não estiver fortemente contraído.");
+    }
+
+    [Fact]
+    public void BracoDireitoPulso_NaoDeve_Rotacionar90_Quando_BracoDireitoPulsoEstiverEmRepouso()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoDireito.Cotovelo = Braco.CotoveloEstados.FortementeContraido;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
+
+        // Arrage
+        var result = _roboServices.EnviarComando("BracoDireito:Pulso:Rotacao90");
+
+        // Arrage
+        expectedRobo.BracoDireito.Pulso.ToString().Should().Be(Braco.PulsoEstados.Repouso.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("O valor fornecido para o estado do pulso não é válido. Valores possíveis: RotacaoMenos45, Rotacao45");
+    }
+
+    [Fact]
+    public void BracoDireitoPulso_NaoDeve_RotacionarMenos90_Quando_BracoDireitoPulsoEstiverEmRepouso()
+    {
+        // Arrange
+        var expectedRobo = new Robo();
+        expectedRobo.BracoDireito.Cotovelo = Braco.CotoveloEstados.FortementeContraido;
+        _mockRoboRepository.Setup(r => r.Get()).Returns(expectedRobo);
+
+        // Arrage
+        var result = _roboServices.EnviarComando("BracoDireito:Pulso:RotacaoMenos90");
+
+        // Arrage
+        expectedRobo.BracoDireito.Pulso.ToString().Should().Be(Braco.PulsoEstados.Repouso.ToString());
+        result.Success.Should().Be(false);
+        result.Message.Should().Be("O valor fornecido para o estado do pulso não é válido. Valores possíveis: RotacaoMenos45, Rotacao45");
+    }
+    #endregion
 }
